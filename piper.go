@@ -18,6 +18,7 @@ type (
 		// Errorf returns an error as fmt.Errorf would, prepending a
 		// description of the launcher.
 		Errorf(pat string, args ...interface{}) error
+		Close() error
 	}
 
 	// Launchable is a convenient way to pass around a Launcher along with
@@ -88,6 +89,13 @@ func (v Verbose) Launch(cmd string) (Executor, error) {
 		return nil, err
 	}
 	return verbexe{exe, v}, nil
+}
+
+// Close implements Launcher.
+func (v Verbose) Close(cmd string) error {
+	err := v.Launcher.Close()
+	v.Logf("Closing %v returned %v", v.Launcher, err)
+	return err
 }
 
 // Run implements Executor.

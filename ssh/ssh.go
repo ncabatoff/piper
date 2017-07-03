@@ -2,11 +2,12 @@ package ssh
 
 import (
 	"fmt"
-	"github.com/ncabatoff/piper"
-	"golang.org/x/crypto/ssh"
 	"io"
 	"io/ioutil"
 	"net"
+
+	"github.com/ncabatoff/piper"
+	"golang.org/x/crypto/ssh"
 )
 
 const defaultSshPort = 22
@@ -62,10 +63,15 @@ func NewConfig(user, keyfname string) (*ssh.ClientConfig, error) {
 	}, nil
 }
 
-// String() implements the piper.Launcher interface.
+// String implements the piper.Launcher interface.
 func (l Launcher) String() string {
 	user, hostport := l.Client.Conn.User(), l.Client.Conn.RemoteAddr()
 	return fmt.Sprintf("%s@%s", user, hostport)
+}
+
+// Close implements the piper.Launcher interface.
+func (l Launcher) Close() error {
+	return l.Client.Close()
 }
 
 // NewLauncher creates a new Launcher by starting an ssh client.

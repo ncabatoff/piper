@@ -3,8 +3,9 @@ package local
 import (
 	"context"
 	"fmt"
-	"github.com/ncabatoff/piper"
 	"os/exec"
+
+	"github.com/ncabatoff/piper"
 )
 
 type (
@@ -32,6 +33,11 @@ func (l Launcher) Errorf(pat string, args ...interface{}) error {
 func (l Launcher) Launch(cmd string) (piper.Executor, error) {
 	ctx, cancel := context.WithCancel(context.Background())
 	return exe{exec.CommandContext(ctx, "sh", "-c", cmd), cancel, cmd}, nil
+}
+
+// Close implements the piper.Launcher interface.
+func (l Launcher) Close() error {
+	return nil
 }
 
 // Errorf implements the piper.Executor interface.
