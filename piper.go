@@ -94,31 +94,39 @@ func (v Verbose) Launch(cmd string) (Executor, error) {
 // Close implements Launcher.
 func (v Verbose) Close() error {
 	err := v.Launcher.Close()
-	v.Logf("Closing %v returned %v", v.Launcher, err)
+	v.Logf("[%s] Close returned %v", v.Launcher.String(), err)
 	return err
 }
 
 // Run implements Executor.
 func (ve verbexe) Run() error {
-	ve.Logf("Running command [%s] on %s", ve.Command(), ve.Verbose.Launcher.String())
-	return ve.Executor.Run()
+	ve.Logf("[%s] Running command [%s]", ve.Verbose.Launcher.String(), ve.Command())
+	err := ve.Executor.Run()
+	if err != nil {
+		ve.Logf("[%s] Command [%s] failed: %v", ve.Verbose.Launcher.String(), ve.Command(), err)
+	}
+	return err
 }
 
 // Start implements Executor.
 func (ve verbexe) Start() error {
-	ve.Logf("Starting command [%s] on %s", ve.Command(), ve.Verbose.Launcher.String())
+	ve.Logf("[%s] Starting command [%s]", ve.Verbose.Launcher.String(), ve.Command())
 	return ve.Executor.Start()
 }
 
 // Wait implements Executor.
 func (ve verbexe) Wait() error {
-	ve.Logf("Waiting for command [%s] on %s", ve.Command(), ve.Verbose.Launcher.String())
-	return ve.Executor.Wait()
+	ve.Logf("[%s] Waiting for command [%s]", ve.Verbose.Launcher.String(), ve.Command())
+	err := ve.Executor.Wait()
+	if err != nil {
+		ve.Logf("[%s] Command [%s] failed: %v", ve.Verbose.Launcher.String(), ve.Command(), err)
+	}
+	return err
 }
 
 // Kill implements Executor.
 func (ve verbexe) Kill() error {
-	ve.Logf("Killing command [%s] on %s", ve.Command(), ve.Verbose.Launcher.String())
+	ve.Logf("[%s] Killing command [%s]", ve.Verbose.Launcher.String(), ve.Command())
 	return ve.Executor.Kill()
 }
 
