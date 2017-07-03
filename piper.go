@@ -92,7 +92,7 @@ func (v Verbose) Launch(cmd string) (Executor, error) {
 }
 
 // Close implements Launcher.
-func (v Verbose) Close(cmd string) error {
+func (v Verbose) Close() error {
 	err := v.Launcher.Close()
 	v.Logf("Closing %v returned %v", v.Launcher, err)
 	return err
